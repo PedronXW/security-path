@@ -68,7 +68,7 @@ export class Client extends Entity<ClientProps> {
       {
         ...props,
         emailVerified: props.emailVerified || false,
-        createdAt: new Date(),
+        createdAt: props.createdAt || new Date(),
       },
       id,
     )
