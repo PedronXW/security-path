@@ -1,6 +1,8 @@
-import { Crypto } from '@/infra/cryptography/crypto'
-import { Encrypter } from '@/infra/cryptography/encrypter'
-import { env } from '@/infra/env'
+
+import { EnvService } from '@/infra/env/env.service'
+import { ConfigService } from '@nestjs/config'
+import { Crypto } from 'test/cryptography/crypto'
+import { Encrypter } from 'test/cryptography/encrypter'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
@@ -10,15 +12,21 @@ let sut: ResetClientPasswordService
 let inMemoryClientRepository: InMemoryClientRepository
 let crypto: Crypto
 let encrypter: Encrypter
+let env: EnvService
 describe('ResetClientPassword', () => {
   beforeEach(() => {
     crypto = new Crypto()
     encrypter = new Encrypter()
+    env = new EnvService(new ConfigService({
+      'JWT_SECRET': 'any_secret',
+      'RESET_PASSWORD_SECRET': 'any_secret',
+    }))
     inMemoryClientRepository = new InMemoryClientRepository()
     sut = new ResetClientPasswordService(
       inMemoryClientRepository,
       crypto,
       encrypter,
+      env
     )
   })
 
@@ -33,7 +41,7 @@ describe('ResetClientPassword', () => {
 
     const id = await encrypter.encrypt(
       { id: client.id.getValue() },
-      env.RESET_PASSWORD_SECRET,
+      env.get('RESET_PASSWORD_SECRET'),
     )
 
     const result = await sut.execute({
@@ -61,7 +69,7 @@ describe('ResetClientPassword', () => {
 
     const id = await encrypter.encrypt(
       { id: 'wrong id' },
-      env.RESET_PASSWORD_SECRET,
+      env.get('RESET_PASSWORD_SECRET'),
     )
 
     const result = await sut.execute({

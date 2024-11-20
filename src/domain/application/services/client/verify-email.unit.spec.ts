@@ -1,6 +1,7 @@
-import { Crypto } from '@/infra/cryptography/crypto'
-import { Encrypter } from '@/infra/cryptography/encrypter'
-import { env } from '@/infra/env'
+import { EnvService } from '@/infra/env/env.service'
+import { ConfigService } from '@nestjs/config'
+import { Crypto } from 'test/cryptography/crypto'
+import { Encrypter } from 'test/cryptography/encrypter'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
@@ -9,13 +10,19 @@ import { VerifyClientEmailService } from './verify-email'
 let sut: VerifyClientEmailService
 let inMemoryClientRepository: InMemoryClientRepository
 let crypto: Crypto
+let env: EnvService
 let encrypter: Encrypter
 describe('VerifyClientEmail', () => {
   beforeEach(() => {
     crypto = new Crypto()
     encrypter = new Encrypter()
+    env = new EnvService(new ConfigService({
+      'JWT_SECRET': 'any_secret',
+      'RESET_PASSWORD_SECRET': 'any_secret',
+      'VERIFY_EMAIL_SECRET': 'any_secret',
+    }))
     inMemoryClientRepository = new InMemoryClientRepository()
-    sut = new VerifyClientEmailService(inMemoryClientRepository, encrypter)
+    sut = new VerifyClientEmailService(inMemoryClientRepository, encrypter, env)
   })
 
   it('should be able to verify a client email', async () => {
@@ -29,7 +36,7 @@ describe('VerifyClientEmail', () => {
 
     const id = await encrypter.encrypt(
       { id: client.id.getValue() },
-      env.VERIFY_EMAIL_SECRET,
+      env.get('VERIFY_EMAIL_SECRET'),
     )
 
     const result = await sut.execute({ id })
@@ -50,7 +57,7 @@ describe('VerifyClientEmail', () => {
 
     const id = await encrypter.encrypt(
       { id: 'wrong id' },
-      env.VERIFY_EMAIL_SECRET,
+      env.get('VERIFY_EMAIL_SECRET'),
     )
 
     const result = await sut.execute({ id })

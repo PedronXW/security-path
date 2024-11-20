@@ -9,8 +9,8 @@ type IPayload = { sub: string }
 export class JwtEncrypter implements Encrypter {
   constructor(private jwtService: JwtService) {}
 
-  async encrypt(payload: Record<string, unknown>): Promise<string> {
-    return this.jwtService.signAsync(payload)
+  async encrypt(payload: Record<string, unknown>, factor:string): Promise<string> {
+    return this.jwtService.signAsync(payload, {privateKey: factor})
   }
 
   async decrypt(token: string, factor?: string): Promise<string> {

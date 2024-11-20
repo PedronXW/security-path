@@ -1,4 +1,4 @@
-import { Crypto } from '@/infra/cryptography/crypto'
+import { Crypto } from 'test/cryptography/crypto'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { CreateClientService } from './create'
 

@@ -1,4 +1,4 @@
-import { Crypto } from '@/infra/cryptography/crypto'
+import { Crypto } from 'test/cryptography/crypto'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { WrongCredentialError } from '../../errors/WrongCredentialsError'
