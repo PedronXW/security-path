@@ -1,6 +1,7 @@
-import { Crypto } from '@/infra/cryptography/crypto'
-import { Encrypter } from '@/infra/cryptography/encrypter'
-import { env } from '@/infra/env'
+import { EnvService } from '@/infra/env/env.service'
+import { ConfigService } from '@nestjs/config'
+import { Crypto } from 'test/cryptography/crypto'
+import { Encrypter } from 'test/cryptography/encrypter'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
@@ -10,12 +11,17 @@ let sut: SendResetPasswordService
 let inMemoryClientRepository: InMemoryClientRepository
 let crypto: Crypto
 let encrypter: Encrypter
+let env: EnvService
 describe('SendResetPassword', () => {
   beforeEach(() => {
     crypto = new Crypto()
     encrypter = new Encrypter()
+    env = new EnvService(new ConfigService({
+      'JWT_SECRET': 'any_secret',
+      'RESET_PASSWORD_SECRET': 'any_secret',
+    }))
     inMemoryClientRepository = new InMemoryClientRepository()
-    sut = new SendResetPasswordService(inMemoryClientRepository, encrypter)
+    sut = new SendResetPasswordService(inMemoryClientRepository, encrypter, env)
   })
 
   it('should be able to send a reset password email', async () => {
@@ -31,7 +37,7 @@ describe('SendResetPassword', () => {
 
     const encryptedId = await encrypter.decrypt(
       result.value as string,
-      env.RESET_PASSWORD_SECRET,
+      env.get('RESET_PASSWORD_SECRET'),
     )
 
     expect(result.isRight()).toBe(true)
