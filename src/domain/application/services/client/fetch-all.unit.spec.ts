@@ -1,6 +1,6 @@
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
-import { FetchAllClientsService } from './fetch-all-clients'
+import { FetchAllClientsService } from './fetch-all'
 
 let sut: FetchAllClientsService
 let inMemoryClientRepository: InMemoryClientRepository

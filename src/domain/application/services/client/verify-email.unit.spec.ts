@@ -4,7 +4,7 @@ import { env } from '@/infra/env'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
-import { VerifyClientEmailService } from './verify-client-email'
+import { VerifyClientEmailService } from './verify-email'
 
 let sut: VerifyClientEmailService
 let inMemoryClientRepository: InMemoryClientRepository

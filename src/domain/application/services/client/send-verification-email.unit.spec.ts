@@ -4,25 +4,24 @@ import { env } from '@/infra/env'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
-import { ResetClientPasswordService } from './reset-client-password'
+import { SendVerificationClientEmailService } from './send-verification-email'
 
-let sut: ResetClientPasswordService
+let sut: SendVerificationClientEmailService
 let inMemoryClientRepository: InMemoryClientRepository
 let crypto: Crypto
 let encrypter: Encrypter
-describe('ResetClientPassword', () => {
+describe('SendVerificationClientEmail', () => {
   beforeEach(() => {
     crypto = new Crypto()
     encrypter = new Encrypter()
     inMemoryClientRepository = new InMemoryClientRepository()
-    sut = new ResetClientPasswordService(
+    sut = new SendVerificationClientEmailService(
       inMemoryClientRepository,
-      crypto,
       encrypter,
     )
   })
 
-  it('should be able to reset a client password', async () => {
+  it('should be able to send a verification client email', async () => {
     const client = makeClient({
       name: 'any_name',
       email: 'any_email@gmail.com',
@@ -31,26 +30,18 @@ describe('ResetClientPassword', () => {
 
     await inMemoryClientRepository.createClient(client)
 
-    const id = await encrypter.encrypt(
-      { id: client.id.getValue() },
-      env.RESET_PASSWORD_SECRET,
-    )
+    const result = await sut.execute({ id: client.id.getValue() })
 
-    const result = await sut.execute({
-      id,
-      password: 'new_password',
-    })
+    const encryptedId = await encrypter.decrypt(
+      result.value as string,
+      env.VERIFY_EMAIL_SECRET,
+    )
 
     expect(result.isRight()).toBe(true)
-    expect(
-      await crypto.compare(
-        'new_password',
-        inMemoryClientRepository.clients[0].password.toString(),
-      ),
-    ).toEqual(true)
+    expect(encryptedId).toEqual(client.id.getValue())
   })
 
-  it('should be able to not reset a client password a wrong id', async () => {
+  it('should not be able to send a verification client email because a wrong id', async () => {
     const client = makeClient({
       name: 'any_name',
       email: 'any_email@gmail.com',
@@ -59,15 +50,7 @@ describe('ResetClientPassword', () => {
 
     await inMemoryClientRepository.createClient(client)
 
-    const id = await encrypter.encrypt(
-      { id: 'wrong id' },
-      env.RESET_PASSWORD_SECRET,
-    )
-
-    const result = await sut.execute({
-      id,
-      password: 'new_password',
-    })
+    const result = await sut.execute({ id: 'wrong id' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ClientNonExistsError)
