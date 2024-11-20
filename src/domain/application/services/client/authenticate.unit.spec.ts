@@ -3,7 +3,7 @@ import { Encrypter } from '@/infra/cryptography/encrypter'
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { WrongCredentialError } from '../../errors/WrongCredentialsError'
-import { AuthenticateClientService } from './authenticate-client'
+import { AuthenticateClientService } from './authenticate'
 
 let sut: AuthenticateClientService
 let inMemoryClientRepository: InMemoryClientRepository

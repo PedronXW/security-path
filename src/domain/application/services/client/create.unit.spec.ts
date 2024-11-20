@@ -1,6 +1,6 @@
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
-import { CreateClientService } from './create-client'
+import { CreateClientService } from './create'
 
 let sut: CreateClientService
 let inMemoryClientRepository: InMemoryClientRepository

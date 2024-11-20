@@ -1,7 +1,7 @@
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
-import { DeleteClientService } from './delete-client'
+import { DeleteClientService } from './delete'
 
 let sut: DeleteClientService
 let inMemoryClientRepository: InMemoryClientRepository

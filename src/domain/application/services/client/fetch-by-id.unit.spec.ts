@@ -1,18 +1,18 @@
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
-import { FetchClientByEmailService } from './fetch-client-by-email'
+import { FetchClientByIdService } from './fetch-by-id'
 
-let sut: FetchClientByEmailService
+let sut: FetchClientByIdService
 let inMemoryClientRepository: InMemoryClientRepository
 
-describe('Fetch Client By Email', () => {
+describe('Fetch Client By ID', () => {
   beforeEach(() => {
     inMemoryClientRepository = new InMemoryClientRepository()
-    sut = new FetchClientByEmailService(inMemoryClientRepository)
+    sut = new FetchClientByIdService(inMemoryClientRepository)
   })
 
-  it('should be able to fetch a client by email', async () => {
+  it('should be able to fetch a client by id', async () => {
     const client = makeClient({
       name: 'any_name',
       email: 'any_email@gmail.com',
@@ -20,13 +20,13 @@ describe('Fetch Client By Email', () => {
 
     await inMemoryClientRepository.createClient(client)
 
-    const result = await sut.execute({ email: client.email })
+    const result = await sut.execute({ id: client.id.getValue() })
 
     expect(result.isRight()).toBe(true)
     expect(inMemoryClientRepository.clients[0].name).toEqual('any_name')
   })
 
-  it('should be able to not fetch a client by email because a wrong email', async () => {
+  it('should be able to not fetch a client because a wrong id', async () => {
     const client = makeClient({
       name: 'any_name',
       email: 'any_email@gmail.com',
@@ -34,7 +34,7 @@ describe('Fetch Client By Email', () => {
 
     await inMemoryClientRepository.createClient(client)
 
-    const result = await sut.execute({ email: 'wrongemail@wrong.com' })
+    const result = await sut.execute({ id: 'wrong id' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ClientNonExistsError)
