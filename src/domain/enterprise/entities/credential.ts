@@ -1,21 +1,14 @@
 import { Entity } from "@/@shared/entities/entity";
 import { EntityId } from "@/@shared/entities/entity-id";
+import { Optional } from "@/@shared/types/optional";
 
 export type CredentialProps = {
-    id: EntityId;
     password: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | null;
+    updatedAt?: Date | null;
 }
 
 export class Credential extends Entity<CredentialProps>{
-    get id(): EntityId {
-        return this.props.id
-    }
-
-    set id(id: EntityId) {
-        this.props.id = id
-    }
 
     get password(): string {
         return this.props.password
@@ -41,14 +34,13 @@ export class Credential extends Entity<CredentialProps>{
         this.props.updatedAt = updatedAt
     }
 
-    static create(props: CredentialProps, id?: EntityId): Credential {
+    static create(props: Optional<CredentialProps, 'createdAt'>, id?: EntityId): Credential {
         const credential = new Credential({
                 ...props,
                 createdAt: props.createdAt || new Date(),
             }, id)
 
         return credential
-        
     }
 
 

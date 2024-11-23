@@ -1,24 +1,16 @@
 import { Entity } from "@/@shared/entities/entity";
 import { EntityId } from "@/@shared/entities/entity-id";
+import { Optional } from "@/@shared/types/optional";
 
 export type InstallationProps = {
-    id: EntityId;
     name: string;
     description: string;
     label: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | null;
+    updatedAt?: Date | null;
 }
 
 export class Installation extends Entity<InstallationProps>{
-    get id(): EntityId {
-        return this.props.id
-    }
-
-    set id(id: EntityId) {
-        this.props.id = id
-    }
-
     get name(): string {
         return this.props.name
     }
@@ -59,7 +51,7 @@ export class Installation extends Entity<InstallationProps>{
         this.props.updatedAt = updatedAt
     }
 
-    static create(props: InstallationProps, id?: EntityId): Installation {
+    static create(props: Optional<InstallationProps, 'createdAt'>, id?: EntityId): Installation {
         const installation = new Installation({
                 ...props,
                 createdAt: props.createdAt || new Date(),
