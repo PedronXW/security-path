@@ -1,23 +1,16 @@
 import { Entity } from "@/@shared/entities/entity";
 import { EntityId } from "@/@shared/entities/entity-id";
+import { Optional } from "@/@shared/types/optional";
 
 export type EquipmentProps = {
-    id: EntityId;
     name: string;
     description: string;
     label: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | null;
+    updatedAt?: Date | null;
 }
 
 export class Equipment extends Entity<EquipmentProps>{
-    get id(): EntityId {
-        return this.props.id
-    }
-
-    set id(id: EntityId) {
-        this.props.id = id
-    }
 
     get label(): string {
         return this.props.label
@@ -59,7 +52,7 @@ export class Equipment extends Entity<EquipmentProps>{
         this.props.updatedAt = updatedAt
     }
 
-    static create(props: EquipmentProps, id?: EntityId): Equipment {
+    static create(props: Optional<EquipmentProps, 'createdAt'>, id?: EntityId): Equipment {
         const equipment = new Equipment({
                 ...props,
                 createdAt: props.createdAt || new Date(),

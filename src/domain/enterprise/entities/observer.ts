@@ -1,24 +1,17 @@
 import { Entity } from "@/@shared/entities/entity";
 import { EntityId } from "@/@shared/entities/entity-id";
+import { Optional } from "@/@shared/types/optional";
 
 export type ObserverProps = {
-    id: EntityId;
     name: string;
     description: string;
     label: string;
     password: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | null;
+    updatedAt?: Date | null;
 }
 
 export class Observer extends Entity<ObserverProps>{
-    get id(): EntityId {
-        return this.props.id
-    }
-
-    set id(id: EntityId) {
-        this.props.id = id
-    }
 
     get name(): string {
         return this.props.name
@@ -68,7 +61,10 @@ export class Observer extends Entity<ObserverProps>{
         this.props.updatedAt = updatedAt
     }
 
-    static create(props: ObserverProps, id?: EntityId): Observer {
-        return new Observer(props, id)
+    static create(props: Optional<ObserverProps, 'createdAt'>, id?: EntityId): Observer {
+        return new Observer({
+            ...props,
+            createdAt: new Date()
+        }, id)
     }
 }

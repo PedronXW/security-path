@@ -1,24 +1,16 @@
 import { Entity } from "@/@shared/entities/entity"
 import { EntityId } from "@/@shared/entities/entity-id"
+import { Optional } from "@/@shared/types/optional"
 
 export type CallCenterProps = {
-  id: EntityId
   name: string
   label: string
   description: string
-  password: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | null
+  updatedAt?: Date | null
 }
 
 export class CallCenter extends Entity<CallCenterProps> {
-  get id(): EntityId {
-    return this.props.id
-  }
-
-  set id(id: EntityId) {
-    this.props.id = id
-  }
 
   get name(): string {
     return this.props.name
@@ -44,14 +36,6 @@ export class CallCenter extends Entity<CallCenterProps> {
     this.props.description = description
   }
 
-  get password(): string {
-    return this.props.password
-  }
-
-  set password(password: string) {
-    this.props.password = password
-  }
-
   get createdAt(): Date {
     return this.props.createdAt
   }
@@ -68,15 +52,12 @@ export class CallCenter extends Entity<CallCenterProps> {
     this.props.updatedAt = updatedAt
   }
 
-  static create(
-    id: EntityId,
-    name: string,
-    label: string,
-    description: string,
-    password: string,
-    createdAt: Date,
-    updatedAt: Date
-  ): CallCenter {
-    return new CallCenter({ id, name, label, description, password, createdAt, updatedAt })
-  }
+  static create(props: Optional<CallCenterProps, 'createdAt'>, id?: EntityId): CallCenter {
+    const callcenter = new CallCenter({
+            ...props,
+            createdAt: props.createdAt || new Date(),
+        }, id)
+
+    return callcenter
+}
 }
