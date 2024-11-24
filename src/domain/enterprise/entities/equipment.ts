@@ -6,6 +6,7 @@ export type EquipmentProps = {
     name: string;
     description: string;
     label: string;
+    credential: string;
     createdAt: Date | null;
     updatedAt?: Date | null;
 }
@@ -34,6 +35,14 @@ export class Equipment extends Entity<EquipmentProps>{
 
     set description(description: string) {
         this.props.description = description
+    }
+
+    get credential(): string {
+        return this.props.credential
+    }
+
+    set credential(credential: string) {
+        this.props.credential = credential
     }
 
     get createdAt(): Date {
