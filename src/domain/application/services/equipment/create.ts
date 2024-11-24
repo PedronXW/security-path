@@ -8,7 +8,7 @@ interface CreateEquipmentServiceRequest {
   name: string
   label: string
   description: string
-  password: string
+  credential: string
 }
 
 type CreateEquipmentServiceResponse = Either<EquipmentAlreadyExistsError, Equipment>
@@ -23,6 +23,7 @@ export class CreateEquipmentService {
     name,
     label,
     description,
+    credential
   }: CreateEquipmentServiceRequest): Promise<CreateEquipmentServiceResponse> {
     const equipmentExists = await this.equipmentRepository.getEquipmentByName(name)
 
@@ -34,6 +35,7 @@ export class CreateEquipmentService {
       name,
       label,
       description,
+      credential,
     })
 
     const newEquipment = await this.equipmentRepository.createEquipment(equipment)

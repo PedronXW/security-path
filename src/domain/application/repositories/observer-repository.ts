@@ -20,5 +20,4 @@ export abstract class ObserverRepository {
 
   abstract getAllObservers(page: number, limit: number): Promise<Observer[]>
 
-  abstract verifyObserverEmail(id: string): Promise<Observer>
 }
