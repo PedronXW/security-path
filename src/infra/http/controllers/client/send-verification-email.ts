@@ -6,7 +6,7 @@ import { Controller, Get, HttpException } from '@nestjs/common'
 
 
 @Controller('/client')
-export class FindClientByIdController {
+export class SendVerificationClientEmailController {
   constructor(
     private readonly sendVerificationEmailService: SendVerificationClientEmailService,
   ) {}

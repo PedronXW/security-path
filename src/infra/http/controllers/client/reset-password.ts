@@ -16,7 +16,7 @@ export type SendResetPasswordDTO = z.infer<typeof sendResetPasswordDTO>
 const bodyValidation = new ZodValidationPipe(sendResetPasswordDTO)
 
 @Controller('/client')
-export class SendResetPasswordController {
+export class ResetPasswordController {
   constructor(private resetClientPasswordService: ResetClientPasswordService) {}
 
   @Patch()

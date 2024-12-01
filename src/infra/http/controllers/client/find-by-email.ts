@@ -1,29 +1,29 @@
 import { ClientNonExistsError } from '@/domain/application/errors/ClientNonExists'
-import { FetchClientByEmailService } from '@/domain/application/services/client/fetch-by-email'
+import { FindClientByEmailService } from '@/domain/application/services/client/find-by-email'
 import { Body, Controller, Get, HttpException } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { ClientPresenter } from '../../presenters/presenter-client'
 
-export const fetchByEmailDTO = z.object({
+export const findByEmailDTO = z.object({
   email: z.string().email(),
 })
 
-export type FetchByEmailDTO = z.infer<typeof fetchByEmailDTO>
+export type FindByEmailDTO = z.infer<typeof findByEmailDTO>
 
-const bodyValidation = new ZodValidationPipe(fetchByEmailDTO)
+const bodyValidation = new ZodValidationPipe(findByEmailDTO)
 
 @Controller('/client')
-export class FindClientByIdController {
+export class FindClientByEmailController {
   constructor(
-    private readonly fetchClientByEmailService: FetchClientByEmailService,
+    private readonly findClientByEmailService: FindClientByEmailService,
   ) {}
 
   @Get()
-  async handle(@Body(bodyValidation) body: FetchByEmailDTO) {
+  async handle(@Body(bodyValidation) body: FindByEmailDTO) {
     const { email } = body
 
-    const receivedClient = await this.fetchClientByEmailService.execute({
+    const receivedClient = await this.findClientByEmailService.execute({
       email
     })
 

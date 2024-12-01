@@ -1,5 +1,5 @@
 import { ClientNonExistsError } from '@/domain/application/errors/ClientNonExists'
-import { FetchClientByIdService } from '@/domain/application/services/client/fetch-by-id'
+import { FindClientByIdService } from '@/domain/application/services/client/find-by-id'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt-strategy'
 import { Controller, Get, HttpException } from '@nestjs/common'
@@ -9,7 +9,7 @@ import { ClientPresenter } from '../../presenters/presenter-client'
 @Controller('/client')
 export class FindClientByIdController {
   constructor(
-    private readonly findClientByIdService: FetchClientByIdService,
+    private readonly findClientByIdService: FindClientByIdService,
   ) {}
 
   @Get()
