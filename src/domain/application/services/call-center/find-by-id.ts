@@ -4,20 +4,20 @@ import { Injectable } from '@nestjs/common'
 import { CallCenterNonExistsError } from '../../errors/CallCenterNonExists'
 import { CallCenterRepository } from '../../repositories/call-center-repository'
 
-type FetchCallCenterByEmailServiceRequest = {
-  name: string
+type FindCallCenterByIdServiceRequest = {
+  id: string
 }
 
-type FetchCallCenterByEmailServiceResponse = Either<CallCenterNonExistsError, CallCenter>
+type FindCallCenterByIdServiceResponse = Either<CallCenterNonExistsError, CallCenter>
 
 @Injectable()
-export class FetchCallCenterByEmailService {
+export class FindCallCenterByIdService {
   constructor(private callcenterRepository: CallCenterRepository) {}
 
   async execute({
-    name,
-  }: FetchCallCenterByEmailServiceRequest): Promise<FetchCallCenterByEmailServiceResponse> {
-    const callcenter = await this.callcenterRepository.getCallCenterByName(name)
+    id,
+  }: FindCallCenterByIdServiceRequest): Promise<FindCallCenterByIdServiceResponse> {
+    const callcenter = await this.callcenterRepository.getCallCenterById(id)
 
     if (!callcenter) {
       return left(new CallCenterNonExistsError())

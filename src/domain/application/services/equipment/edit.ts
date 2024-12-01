@@ -6,7 +6,9 @@ import { EquipmentRepository } from '../../repositories/equipment-repository'
 
 type EditEquipmentServiceRequest = {
   name?: string
-  email?: string
+  description?: string
+  label?: string
+  credential?: string
 }
 
 type EditEquipmentServiceResponse = Either<EquipmentNonExistsError, Equipment>
@@ -17,7 +19,7 @@ export class EditEquipmentService {
 
   async execute(
     id: string,
-    { name, email }: EditEquipmentServiceRequest,
+    { name, credential, description, label }: EditEquipmentServiceRequest,
   ): Promise<EditEquipmentServiceResponse> {
     const equipment = await this.equipmentRepository.getEquipmentById(id)
 

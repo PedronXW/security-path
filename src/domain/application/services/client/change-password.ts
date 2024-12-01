@@ -10,7 +10,7 @@ import { ClientRepository } from '../../repositories/client-repository'
 type ChangePasswordServiceResponse = Either<ClientNonExistsError, Client>
 
 @Injectable()
-export class ChangePasswordService {
+export class ChangeClientPasswordService {
   constructor(
     private readonly clientRepository: ClientRepository,
     private hashComparer: HashComparer,

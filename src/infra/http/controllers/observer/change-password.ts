@@ -1,14 +1,14 @@
 
-import { ClientNonExistsError } from '@/domain/application/errors/ClientNonExists'
+import { ObserverNonExistsError } from '@/domain/application/errors/ObserverNonExists'
 import { WrongCredentialError } from '@/domain/application/errors/WrongCredentialsError'
-import { ChangeClientPasswordService } from '@/domain/application/services/client/change-password'
+import { ChangeObserverPasswordService } from '@/domain/application/services/observer/change-password'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt-strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { Body, Controller, HttpException, Patch } from '@nestjs/common'
 
 import { z } from 'zod'
-import { ClientPresenter } from '../../presenters/presenter-client'
+import { ObserverPresenter } from '../../presenters/presenter-observer'
 
 const changePasswordDTO = z.object({
   password: z.string().min(8),
@@ -19,37 +19,37 @@ export type ChangePasswordDTO = z.infer<typeof changePasswordDTO>
 
 const bodyValidation = new ZodValidationPipe(changePasswordDTO)
 
-@Controller('/client/password')
-export class ChangeClientPasswordController {
-  constructor(private readonly changePasswordService: ChangeClientPasswordService) {}
+@Controller('/observer/password')
+export class ChangeObserverPasswordController {
+  constructor(private readonly changePasswordService: ChangeObserverPasswordService) {}
 
   @Patch()
   async handle(
     @Body(bodyValidation) body: ChangePasswordDTO,
-    @CurrentUser() client: UserPayload,
+    @CurrentUser() observer: UserPayload,
   ) {
-    const { sub } = client
+    const { sub } = observer
 
     const { password, newPassword } = body
 
-    const editedClient = await this.changePasswordService.execute(
+    const editedObserver = await this.changePasswordService.execute(
       sub,
       password,
       newPassword,
     )
 
-    if (editedClient.isLeft()) {
-      const error = editedClient.value
+    if (editedObserver.isLeft()) {
+      const error = editedObserver.value
       switch (error.constructor) {
         case WrongCredentialError:
           throw new HttpException(error.message, 401)
-        case ClientNonExistsError:
+        case ObserverNonExistsError:
           throw new HttpException(error.message, 403)
         default:
           throw new HttpException(error.message, 500)
       }
     }
 
-    return { client: ClientPresenter.toHTTP(editedClient.value) }
+    return { observer: ObserverPresenter.toHTTP(editedObserver.value) }
   }
 }

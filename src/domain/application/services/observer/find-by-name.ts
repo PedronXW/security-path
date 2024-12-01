@@ -4,19 +4,19 @@ import { Injectable } from '@nestjs/common'
 import { ObserverNonExistsError } from '../../errors/ObserverNonExists'
 import { ObserverRepository } from '../../repositories/observer-repository'
 
-type FetchObserverByEmailServiceRequest = {
+type FindObserverByNameServiceRequest = {
   name: string
 }
 
-type FetchObserverByEmailServiceResponse = Either<ObserverNonExistsError, Observer>
+type FindObserverByNameServiceResponse = Either<ObserverNonExistsError, Observer>
 
 @Injectable()
-export class FetchObserverByEmailService {
+export class FindObserverByNameService {
   constructor(private observerRepository: ObserverRepository) {}
 
   async execute({
     name,
-  }: FetchObserverByEmailServiceRequest): Promise<FetchObserverByEmailServiceResponse> {
+  }: FindObserverByNameServiceRequest): Promise<FindObserverByNameServiceResponse> {
     const observer = await this.observerRepository.getObserverByName(name)
 
     if (!observer) {

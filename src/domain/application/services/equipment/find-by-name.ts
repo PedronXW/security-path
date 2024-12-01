@@ -4,20 +4,20 @@ import { Injectable } from '@nestjs/common'
 import { EquipmentNonExistsError } from '../../errors/EquipmentNonExists'
 import { EquipmentRepository } from '../../repositories/equipment-repository'
 
-type FetchEquipmentByIdServiceRequest = {
-  id: string
+type FindEquipmentByNameServiceRequest = {
+  name: string
 }
 
-type FetchEquipmentByIdServiceResponse = Either<EquipmentNonExistsError, Equipment>
+type FindEquipmentByNameServiceResponse = Either<EquipmentNonExistsError, Equipment>
 
 @Injectable()
-export class FetchEquipmentByIdService {
+export class FindEquipmentByNameService {
   constructor(private equipmentRepository: EquipmentRepository) {}
 
   async execute({
-    id,
-  }: FetchEquipmentByIdServiceRequest): Promise<FetchEquipmentByIdServiceResponse> {
-    const equipment = await this.equipmentRepository.getEquipmentById(id)
+    name,
+  }: FindEquipmentByNameServiceRequest): Promise<FindEquipmentByNameServiceResponse> {
+    const equipment = await this.equipmentRepository.getEquipmentByName(name)
 
     if (!equipment) {
       return left(new EquipmentNonExistsError())

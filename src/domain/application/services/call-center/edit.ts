@@ -6,7 +6,8 @@ import { CallCenterRepository } from '../../repositories/call-center-repository'
 
 type EditCallCenterServiceRequest = {
   name?: string
-  email?: string
+  description?: string
+  label?: string
 }
 
 type EditCallCenterServiceResponse = Either<CallCenterNonExistsError, CallCenter>
@@ -17,7 +18,7 @@ export class EditCallCenterService {
 
   async execute(
     id: string,
-    { name, email }: EditCallCenterServiceRequest,
+    { name, description, label }: EditCallCenterServiceRequest,
   ): Promise<EditCallCenterServiceResponse> {
     const callcenter = await this.callcenterRepository.getCallCenterById(id)
 
@@ -25,10 +26,7 @@ export class EditCallCenterService {
       return left(new CallCenterNonExistsError())
     }
 
-    const updatedCallCenter = await this.callcenterRepository.editCallCenter(id, {
-      name,
-      email,
-    })
+    const updatedCallCenter = await this.callcenterRepository.editCallCenter(id, callcenter)
 
     return right(updatedCallCenter)
   }

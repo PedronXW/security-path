@@ -4,19 +4,19 @@ import { Injectable } from '@nestjs/common'
 import { InstallationNonExistsError } from '../../errors/InstallationNonExists'
 import { InstallationRepository } from '../../repositories/installation-repository'
 
-type FetchInstallationByEmailServiceRequest = {
+type FindInstallationByNameServiceRequest = {
   name: string
 }
 
-type FetchInstallationByEmailServiceResponse = Either<InstallationNonExistsError, Installation>
+type FindInstallationByNameServiceResponse = Either<InstallationNonExistsError, Installation>
 
 @Injectable()
-export class FetchInstallationByEmailService {
+export class FindInstallationByNameService {
   constructor(private installationRepository: InstallationRepository) {}
 
   async execute({
     name,
-  }: FetchInstallationByEmailServiceRequest): Promise<FetchInstallationByEmailServiceResponse> {
+  }: FindInstallationByNameServiceRequest): Promise<FindInstallationByNameServiceResponse> {
     const installation = await this.installationRepository.getInstallationByName(name)
 
     if (!installation) {

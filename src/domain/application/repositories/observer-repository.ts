@@ -1,9 +1,5 @@
-import { Observer } from '@/domain/enterprise/entities/observer'
+import { Observer } from '@/domain/enterprise/entities/observer';
 
-export type EditObserver = {
-  name?: string
-  email?: string
-}
 
 export abstract class ObserverRepository {
   abstract createObserver(observer: Observer): Promise<Observer>
@@ -12,7 +8,7 @@ export abstract class ObserverRepository {
 
   abstract deleteObserver(id: string): Promise<boolean>
 
-  abstract editObserver(id: string, observer: EditObserver): Promise<Observer>
+  abstract editObserver(id: string, observer: Observer): Promise<Observer>
 
   abstract getObserverByName(name: string): Promise<Observer | null>
 
