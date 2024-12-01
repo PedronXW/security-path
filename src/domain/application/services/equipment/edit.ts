@@ -25,10 +25,11 @@ export class EditEquipmentService {
       return left(new EquipmentNonExistsError())
     }
 
-    const updatedEquipment = await this.equipmentRepository.editEquipment(id, {
-      name,
-      email,
-    })
+    if (name) {
+      equipment.name = name
+    }
+
+    const updatedEquipment = await this.equipmentRepository.editEquipment(id, equipment)
 
     return right(updatedEquipment)
   }

@@ -1,18 +1,18 @@
 import { makeClient } from 'test/factories/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
-import { FetchClientByIdService } from './fetch-by-id'
+import { FindClientByIdService } from './find-by-id'
 
-let sut: FetchClientByIdService
+let sut: FindClientByIdService
 let inMemoryClientRepository: InMemoryClientRepository
 
-describe('Fetch Client By ID', () => {
+describe('Find Client By ID', () => {
   beforeEach(() => {
     inMemoryClientRepository = new InMemoryClientRepository()
-    sut = new FetchClientByIdService(inMemoryClientRepository)
+    sut = new FindClientByIdService(inMemoryClientRepository)
   })
 
-  it('should be able to fetch a client by id', async () => {
+  it('should be able to find a client by id', async () => {
     const client = makeClient({
       name: 'any_name',
       email: 'any_email@gmail.com',
@@ -26,7 +26,7 @@ describe('Fetch Client By ID', () => {
     expect(inMemoryClientRepository.clients[0].name).toEqual('any_name')
   })
 
-  it('should be able to not fetch a client because a wrong id', async () => {
+  it('should be able to not find a client because a wrong id', async () => {
     const client = makeClient({
       name: 'any_name',
       email: 'any_email@gmail.com',
