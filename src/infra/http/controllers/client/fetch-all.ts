@@ -1,24 +1,32 @@
 import { ClientNonExistsError } from '@/domain/application/errors/ClientNonExists'
-import { FetchClientByIdService } from '@/domain/application/services/client/fetch-by-id'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { UserPayload } from '@/infra/auth/jwt-strategy'
-import { Controller, Get, HttpException } from '@nestjs/common'
+import { FetchAllClientsService } from '@/domain/application/services/client/fetch-all'
+import { Body, Controller, Get, HttpException } from '@nestjs/common'
+import { z } from 'zod'
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { ClientPresenter } from '../../presenters/presenter-client'
 
 
+const fetchAllClientsDTO = z.object({
+  limit: z.number().int().positive().optional(),
+  page: z.number().int().positive().optional(),
+})
+
+export type FetchAllClientsDTO = z.infer<typeof fetchAllClientsDTO>
+
+const bodyValidation = new ZodValidationPipe(fetchAllClientsDTO)
+
+
 @Controller('/client')
-export class FindClientByIdController {
+export class FetchAllClientsController {
   constructor(
-    private readonly findClientByIdService: FetchClientByIdService,
+    private readonly fetchAllClientsService: FetchAllClientsService,
   ) {}
 
   @Get()
-  async handle(@CurrentUser() client: UserPayload) {
-    const { sub } = client
+  async handle(@Body(bodyValidation) body: FetchAllClientsDTO) {
+    const { page, limit } = body
 
-    const receivedClient = await this.findClientByIdService.execute({
-      id: sub,
-    })
+    const receivedClient = await this.fetchAllClientsService.execute(page, limit)
 
     if (receivedClient.isLeft()) {
       const error = receivedClient.value
@@ -30,6 +38,6 @@ export class FindClientByIdController {
       }
     }
 
-    return { client: ClientPresenter.toHTTP(receivedClient.value) }
+    return { client: receivedClient.value.map(ClientPresenter.toHTTP) }
   }
 }

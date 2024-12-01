@@ -4,20 +4,20 @@ import { Injectable } from '@nestjs/common'
 import { ClientNonExistsError } from '../../errors/ClientNonExists'
 import { ClientRepository } from '../../repositories/client-repository'
 
-type FetchClientByIdServiceRequest = {
-  id: string
+type FindClientByEmailServiceRequest = {
+  email: string
 }
 
-type FetchClientByIdServiceResponse = Either<ClientNonExistsError, Client>
+type FindClientByEmailServiceResponse = Either<ClientNonExistsError, Client>
 
 @Injectable()
-export class FetchClientByIdService {
+export class FindClientByEmailService {
   constructor(private clientRepository: ClientRepository) {}
 
   async execute({
-    id,
-  }: FetchClientByIdServiceRequest): Promise<FetchClientByIdServiceResponse> {
-    const client = await this.clientRepository.getClientById(id)
+    email,
+  }: FindClientByEmailServiceRequest): Promise<FindClientByEmailServiceResponse> {
+    const client = await this.clientRepository.getClientByEmail(email)
 
     if (!client) {
       return left(new ClientNonExistsError())

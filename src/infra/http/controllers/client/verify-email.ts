@@ -7,7 +7,7 @@ import { ClientPresenter } from '../../presenters/presenter-client'
 
 
 @Controller('/client')
-export class FindClientByIdController {
+export class VerifyClientEmailController {
   constructor(
     private readonly verifyEmailService: VerifyClientEmailService,
   ) {}
