@@ -6,7 +6,8 @@ import { InstallationRepository } from '../../repositories/installation-reposito
 
 type EditInstallationServiceRequest = {
   name?: string
-  email?: string
+  description?: string
+  label?: string
 }
 
 type EditInstallationServiceResponse = Either<InstallationNonExistsError, Installation>
@@ -17,7 +18,7 @@ export class EditInstallationService {
 
   async execute(
     id: string,
-    { name, email }: EditInstallationServiceRequest,
+    { name, description, label }: EditInstallationServiceRequest,
   ): Promise<EditInstallationServiceResponse> {
     const installation = await this.installationRepository.getInstallationById(id)
 
@@ -25,10 +26,7 @@ export class EditInstallationService {
       return left(new InstallationNonExistsError())
     }
 
-    const updatedInstallation = await this.installationRepository.editInstallation(id, {
-      name,
-      email,
-    })
+    const updatedInstallation = await this.installationRepository.editInstallation(id, installation)
 
     return right(updatedInstallation)
   }

@@ -10,7 +10,7 @@ import { ObserverRepository } from '../../repositories/observer-repository'
 type ChangePasswordServiceResponse = Either<ObserverNonExistsError, Observer>
 
 @Injectable()
-export class ChangePasswordService {
+export class ChangeObserverPasswordService {
   constructor(
     private readonly observerRepository: ObserverRepository,
     private hashComparer: HashComparer,

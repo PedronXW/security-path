@@ -6,7 +6,9 @@ import { ObserverRepository } from '../../repositories/observer-repository'
 
 type EditObserverServiceRequest = {
   name?: string
-  email?: string
+  description?: string
+  label?: string
+  password?: string
 }
 
 type EditObserverServiceResponse = Either<ObserverNonExistsError, Observer>
@@ -17,7 +19,7 @@ export class EditObserverService {
 
   async execute(
     id: string,
-    { name, email }: EditObserverServiceRequest,
+    { name, description, label, password }: EditObserverServiceRequest,
   ): Promise<EditObserverServiceResponse> {
     const observer = await this.observerRepository.getObserverById(id)
 
@@ -25,10 +27,7 @@ export class EditObserverService {
       return left(new ObserverNonExistsError())
     }
 
-    const updatedObserver = await this.observerRepository.editObserver(id, {
-      name,
-      email,
-    })
+    const updatedObserver = await this.observerRepository.editObserver(id, observer)
 
     return right(updatedObserver)
   }

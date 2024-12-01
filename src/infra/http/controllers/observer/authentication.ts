@@ -1,7 +1,7 @@
 import { Public } from '@/infra/auth/public'
 
 import { WrongCredentialError } from '@/domain/application/errors/WrongCredentialsError'
-import { AuthenticateClientService } from '@/domain/application/services/client/authenticate'
+import { AuthenticateObserverService } from '@/domain/application/services/observer/authenticate'
 import {
   BadRequestException,
   Body,
@@ -13,27 +13,27 @@ import {
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 
-export const authenticateClientDTO = z.object({
-  email: z.string().email(),
+export const authenticateObserverDTO = z.object({
+  name: z.string().min(2).max(140),
   password: z.string().min(8),
 })
 
-export type AuthenticateClientDTO = z.infer<typeof authenticateClientDTO>
+export type AuthenticateObserverDTO = z.infer<typeof authenticateObserverDTO>
 
 @Public()
 @Controller('/session')
-export class AuthenticateClientController {
+export class AuthenticateObserverController {
   constructor(
-    private authenticateClientService: AuthenticateClientService,
+    private authenticateObserverService: AuthenticateObserverService,
   ) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(authenticateClientDTO))
-  async handle(@Body() body: AuthenticateClientDTO) {
-    const { email, password } = body
+  @UsePipes(new ZodValidationPipe(authenticateObserverDTO))
+  async handle(@Body() body: AuthenticateObserverDTO) {
+    const { name, password } = body
 
-    const token = await this.authenticateClientService.execute({
-      email,
+    const token = await this.authenticateObserverService.execute({
+      name,
       password,
     })
 

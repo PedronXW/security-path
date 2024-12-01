@@ -8,7 +8,6 @@ interface CreateInstallationServiceRequest {
   name: string
   label: string
   description: string
-  password: string
 }
 
 type CreateInstallationServiceResponse = Either<InstallationAlreadyExistsError, Installation>

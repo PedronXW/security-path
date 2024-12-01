@@ -1,7 +1,7 @@
 import { makeObserver } from 'test/factories/observer-factory'
 import { InMemoryObserverRepository } from 'test/repositories/InMemoryObserverRepository'
 import { ObserverNonExistsError } from '../../errors/ObserverNonExists'
-import { FetchObserverByIdService } from './fetch-by-id'
+import { FetchObserverByIdService } from './find-by-id'
 
 let sut: FetchObserverByIdService
 let inMemoryObserverRepository: InMemoryObserverRepository

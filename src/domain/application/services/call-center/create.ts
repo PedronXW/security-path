@@ -8,7 +8,6 @@ interface CreateCallCenterServiceRequest {
   name: string
   label: string
   description: string
-  password: string
 }
 
 type CreateCallCenterServiceResponse = Either<CallCenterAlreadyExistsError, CallCenter>
